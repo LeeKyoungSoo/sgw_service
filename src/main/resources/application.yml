@@ -1,0 +1,53 @@
+server:
+  port: 9001
+
+eureka :
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://admin:admin2580@${eureka.instance.hostname}:9000/eureka/
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: 'http://${eureka.instance.hostname}, http://141.164.61.114:8999'
+            allow-credentials: true
+            allowedHeaders: '*'
+            allowedMethods:
+                - PUT
+                - GET
+                - POST
+                - DELETE
+                - OPTIONS
+      routes:
+        - id: oauth-service
+          uri: lb://OAUTH-SERVICE
+          predicates:
+            - Path=/oauth/**
+        - id: member-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/member/**
+        - id: board-service
+          uri: lb://MEMBER-SERVICE
+          predicates:
+            - Path=/board/**
+          filters:
+            - RewritePath=/oauth/?(?<segment>.*), /$\{segment}
+            - CustomAuthFilter
+
+  main:
+    web-application-type: reactive
+
+token:
+  secret: lnworkskey2580lnworkskey2580lnworkskey2580lnworkskey2580lnworkskey2580lnworkskey2580
