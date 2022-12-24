@@ -34,14 +34,14 @@ spring:
           uri: lb://OAUTH-SERVICE
           predicates:
             - Path=/oauth/**
+        - id: guest-service
+          uri: lb://GUEST-SERVICE
+          predicates:
+            - Path=/guest/**
         - id: member-service
           uri: lb://MEMBER-SERVICE
           predicates:
             - Path=/member/**
-        - id: board-service
-          uri: lb://MEMBER-SERVICE
-          predicates:
-            - Path=/board/**
           filters:
             - RewritePath=/oauth/?(?<segment>.*), /$\{segment}
             - CustomAuthFilter
