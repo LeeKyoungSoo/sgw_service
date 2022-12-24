@@ -11,6 +11,9 @@ eureka :
       defaultZone: http://admin:admin2580@${eureka.instance.hostname}:9000/eureka/
 
 spring:
+  config:
+    activate:
+      on-profile: prod
   application:
     name: gateway-service
   cloud:
